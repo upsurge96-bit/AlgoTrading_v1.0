@@ -1,0 +1,73 @@
+# ===============================
+# 📊 DATABASES & STORAGE
+# ===============================
+
+timescaledb:
+  url: postgresql://trader:traderpass@timescaledb:5432/trading
+  pool_size: 10
+  echo: false
+  connect_args:
+    connect_timeout: 5
+
+minio:
+  endpoint: minio:9000
+  access_key: minioaccess
+  secret_key: miniopass
+  bucket: market-data
+  secure: false
+  region: us-east-1
+
+# ===============================
+# ☁️ MESSAGING
+# ===============================
+
+kafka:
+  brokers: kafka:9092
+  topic: market_data
+  group_id: data_service_group
+  auto_create_topics: true
+
+redis:
+  host: redis
+  port: 6379
+  db: 0
+
+# ===============================
+# ⏱️ RETENTION / SCHEDULER SETTINGS
+# ===============================
+
+retention:
+  timescale_days: 90
+  minio_years: 5
+
+data:
+  symbols:
+    - NIFTY50
+  timeframe: 1m
+  fetch_interval_sec: 60
+  limit: 500
+
+data_source:
+  provider: kite
+  exchange: NSE
+
+# ===============================
+# 🩺 MONITORING TARGETS
+# ===============================
+
+monitoring:
+  targets:
+    data_service: http://data_service:8080/healthz
+    strategy_service: http://strategy_service:8020/healthz
+    execution_service: http://execution_service:8030/healthz
+    risk_service: http://risk_service:8040/healthz
+    auth_service: http://auth_service:8018/health
+
+# ===============================
+# 📈 BROKER INTEGRATIONS
+# ===============================
+
+kite:
+  api_key: ${KITE_API_KEY}
+  access_token: ${KITE_ACCESS_TOKEN}
+  tokens: ${KITE_TOKENS}

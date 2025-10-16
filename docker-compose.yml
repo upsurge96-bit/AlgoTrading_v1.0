@@ -1,0 +1,242 @@
+services:
+
+  # ==================================================
+  # 🧠 AUTHENTICATION SERVICE
+  # ==================================================
+  auth_service:
+    build:
+      context: .                              # ✅ Build from project root
+      dockerfile: ./services/auth-service/Dockerfile
+    container_name: auth_service
+    ports:
+      - "8018:8018"
+    environment:
+      - PYTHONPATH=/app
+      - DOCKER_ENV=true
+    env_file:
+      - .env
+      - ./config/secrets.env
+    volumes:
+      - ./.env:/app/.env
+      - ./config:/app/config
+      - ./logs:/logs
+    restart: always
+    depends_on:
+      - data_service
+    networks:
+      - monitoring-net
+
+
+
+
+
+  # ==================================================
+  # 🧠 DATA INGESTION SERVICE
+  # ==================================================
+  data_service:
+    build:
+      context: .
+      dockerfile: ./services/data_service/Dockerfile
+    container_name: data_service
+    restart: always
+    env_file:
+      - .env
+      - ./config/secrets.env
+    environment:
+      SERVICE_NAME: data_service      # ✅ Force correct logger tag
+      LOG_DIR: /logs                  # ✅ Ensure correct log directory
+    volumes:
+      - ./config:/app/config
+      - ./logs:/logs
+    ports:
+      - "${DATA_SERVICE_PORT:-8080}:8080"
+    depends_on:
+      - kafka
+      - minio
+    networks:
+      - monitoring-net
+    command: >
+      uvicorn services.data_service.main:app
+      --host 0.0.0.0
+      --port 8080
+
+
+  # --------------------------------------------------------------
+  # 🔸 Zookeeper
+  # --------------------------------------------------------------
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - monitoring-net    # ✅ same network as kafka
+    restart: unless-stopped
+
+  # --------------------------------------------------------------
+  # 🔸 Kafka Broker
+  # --------------------------------------------------------------
+  kafka:
+   image: confluentinc/cp-kafka:7.6.1
+   container_name: kafka
+   depends_on:
+     - zookeeper
+   environment:
+     KAFKA_BROKER_ID: 1
+     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # ✅ reachable inside same network
+     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+   ports:
+     - "9092:9092"
+   networks:
+     - monitoring-net    # ✅ same network
+   restart: unless-stopped
+
+  # --------------------------------------------------------------
+  # 🪣 MinIO (Historical Storage)
+  # --------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioaccess
+      MINIO_ROOT_PASSWORD: miniopass
+    volumes:
+      - ./data/minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - monitoring-net
+
+  # --------------------------------------------------------------
+  # 🐘 TimescaleDB (Postgres + Timescale extension)
+  # --------------------------------------------------------------
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: timescaledb
+    environment:
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: traderpass
+      POSTGRES_DB:  
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trader -d trading"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      postgres -c max_connections=100
+               -c shared_buffers=512MB
+               -c work_mem=16MB
+               -c maintenance_work_mem=128MB
+               -c effective_cache_size=2GB
+               -c timescaledb.max_background_workers=8
+               -c timescaledb.telemetry_level=off
+    networks:
+      - monitoring-net
+
+
+
+  # ==================================================
+  # 🪵 MONITORING + LOGS STACK
+  # ==================================================
+  monitoring_service:
+    build:
+      context: .
+      dockerfile: ./services/monitoring-service/Dockerfile
+    container_name: monitoring_service
+    restart: always
+    env_file: .env
+    volumes:
+      - ./logs:/logs
+      - ./config:/app/config
+    ports:
+      - "${MONITOR_PORT:-8070}:8070"
+    depends_on:
+      - prometheus
+      - loki
+      - alertmanager
+    networks:
+      - monitoring-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - monitoring-net
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: always
+    volumes:
+      - ./monitoring/alerts:/etc/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    ports:
+      - "${ALERTMANAGER_PORT:-9093}:9093"
+    networks:
+      - monitoring-net
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/config.yml
+    volumes:
+      - ./monitoring/loki/config.yml:/etc/loki/config.yml:ro
+      - ./logs:/var/log/trading
+    ports:
+      - "3100:3100"
+    networks:
+      - monitoring-net       # ✅ must match promtail network
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./monitoring/promtail/config.yml:/etc/promtail/config.yml:ro
+      - ./logs:/var/log/trading
+    depends_on:
+      - loki
+    networks:
+      - monitoring-net       # ✅ same network as loki
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: rahulkujur31@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - timescaledb
+    networks:
+      - monitoring-net 
+
+
+# ==================================================
+# 🔹 NETWORK
+# ==================================================
+networks:
+  monitoring-net:
+    driver: bridge

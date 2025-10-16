@@ -1,0 +1,13 @@
+# Ignore DB data, logs, cache, venvs
+data/
+logs/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.db
+.envrc
+.env.local
+.git/
+.gitignore
+monitoring/

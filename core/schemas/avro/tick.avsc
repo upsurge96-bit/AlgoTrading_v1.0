@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "Tick",
+  "namespace": "com.myorg.algotrading",
+  "fields": [
+    {"name": "event_id", "type": ["null", "string"], "default": null},
+    {"name": "symbol", "type": "string"},
+    {"name": "exchange", "type": ["null","string"], "default": null},
+    {"name": "timestamp", "type": "string"},
+    {"name": "price", "type": ["null","double"], "default": null},
+    {"name": "last_price", "type": ["null","double"], "default": null},
+    {"name": "volume", "type": ["null","double"], "default": null},
+    {"name": "tick_type", "type": ["null","string"], "default": "trade"},
+    {"name": "source", "type": ["null","string"], "default": null},
+    {"name": "ingest_ts", "type": ["null","string"], "default": null},
+    {"name": "raw", "type":["null", {"type":"map","values":"string"}], "default": null}
+  ]
+}

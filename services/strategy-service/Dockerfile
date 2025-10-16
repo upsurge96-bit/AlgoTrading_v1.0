@@ -1,0 +1,30 @@
+# ==============================================
+# ⚙️ STRATEGY SERVICE (with TA-Lib)
+# ==============================================
+FROM python:3.11-slim
+
+# Environment setup
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
+
+WORKDIR /app
+
+# Copy and install dependencies
+COPY requirements.txt .
+
+RUN apt-get update && apt-get install -y --no-install-recommends gcc \
+ && pip install --no-cache-dir --upgrade pip \
+ && pip install --no-cache-dir "numpy<2.0" \
+ && pip install --no-cache-dir TA-Lib==0.4.28 \
+ && pip install --no-cache-dir -r requirements.txt \
+ && apt-get purge -y gcc && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+
+# Copy source code
+COPY ./core ./core
+COPY ./services/strategy-service ./services/strategy-service
+COPY ./config ./config
+
+# Runtime
+EXPOSE 8080
+CMD ["python", "services/strategy-service/main.py"]

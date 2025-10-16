@@ -1,0 +1,49 @@
+global:
+  scrape_interval: 15s          # how often Prometheus scrapes metrics
+  evaluation_interval: 15s      # how often Prometheus evaluates alert rules
+
+scrape_configs:
+  # ==================================================
+  # 📊 MONITORING SERVICE
+  # ==================================================
+  - job_name: 'monitoring_service'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['monitoring_service:8070']
+        labels:
+          service: monitoring_service
+          env: production
+
+  # ==================================================
+  # 🧠 DATA INGESTION SERVICE
+  # ==================================================
+  - job_name: 'data_service'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['data_service:8080']
+        labels:
+          service: data_service
+          env: production
+
+  # ==================================================
+  # 📈 PROMETHEUS SELF-MONITORING
+  # ==================================================
+  - job_name: 'prometheus'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['prometheus:9090']
+        labels:
+          service: prometheus
+          env: infrastructure
+
+
+  # ==================================================
+  # 🧩 Add other microservices here later
+  # ==================================================
+  # - job_name: 'strategy_service'
+  #   metrics_path: /metrics
+  #   static_configs:
+  #     - targets: ['strategy_service:8020']
+  #       labels:
+  #         service: strategy_service
+  #         env: production

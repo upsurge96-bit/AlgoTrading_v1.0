@@ -1,0 +1,11 @@
+kiteconnect
+confluent-kafka
+sqlalchemy
+pandas
+psycopg2-binary
+minio
+websocket-client
+websockets 
+asyncio
+struct
+json

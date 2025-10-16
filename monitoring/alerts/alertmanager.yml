@@ -1,0 +1,19 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 5m
+  receiver: 'default'
+
+receivers:
+  - name: 'default'
+    email_configs:
+      - to: "rahulkujur31@gmail.com"
+        from: "up.surge96@gmail.com"
+        smarthost: "smtp.gmail.com:587"
+        auth_username: "up.surge96@gmail.com"
+        auth_identity: "up.surge96@gmail.com"
+        auth_password: "scapjxumdkknzazd"

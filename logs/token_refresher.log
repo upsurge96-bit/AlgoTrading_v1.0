@@ -1,0 +1,21 @@
+2025-10-15 22:26:30,745 [INFO] [token_refresher] 🚀 [STARTUP] Token Refresher API starting up...
+2025-10-15 22:26:30,745 [INFO] [token_refresher] 👀 [WATCHER] Watching for request_token updates every 30s...
+2025-10-15 22:26:30,748 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:27:02,964 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:27:35,196 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:28:07,486 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:28:39,858 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:29:12,295 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:29:44,496 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:30:16,924 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:30:49,445 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:31:21,799 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:31:54,119 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:32:26,518 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:32:58,964 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:33:31,343 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:34:03,686 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:34:36,065 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:35:08,487 [WARNING] [token_refresher] ⚠️ [WATCHER] Error reading .env: [Errno 2] No such file or directory: '/.env'
+2025-10-15 22:35:18,243 [INFO] [token_refresher] 🧹 [SHUTDOWN] Cleaning up background tasks...
+2025-10-15 22:35:18,243 [INFO] [token_refresher] ✅ [EXIT] Token Refresher API shut down cleanly.

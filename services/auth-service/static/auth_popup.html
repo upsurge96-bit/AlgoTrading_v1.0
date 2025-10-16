@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kite Token Login</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #0091ea;
+      margin-bottom: 0.2rem;
+    }
+    p {
+      color: #555;
+    }
+    button {
+      margin-top: 1rem;
+      background-color: #0091ea;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background-color: #0277bd;
+    }
+    .status {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zerodha Login</h1>
+  <p>Click below to authenticate and refresh your Kite token.</p>
+  <button id="loginBtn">Login with Zerodha</button>
+  <div class="status" id="statusText">Awaiting user action...</div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let popupRef = null;
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      document.getElementById("statusText").innerText = "Fetching login URL...";
+      try {
+        const res = await fetch(`${API_BASE}/`);
+        const data = await res.json();
+        if (data.login_url) {
+          popupRef = window.open(data.login_url, "kiteLogin", "width=600,height=700");
+          document.getElementById("statusText").innerText = "Waiting for authentication...";
+        } else {
+          document.getElementById("statusText").innerText = "Error: Could not get login URL.";
+        }
+      } catch (err) {
+        document.getElementById("statusText").innerText = "Network error: " + err.message;
+      }
+    });
+
+    window.addEventListener("message", async (event) => {
+      const data = event.data;
+      if (data && data.status === "success" && data.access_token) {
+        document.getElementById("statusText").innerHTML =
+          "✅ Token received. Updating environment...";
+
+        try {
+          const response = await fetch(`${API_BASE}/health`);
+          const info = await response.json();
+          console.log("Service Health:", info);
+          document.getElementById("statusText").innerHTML =
+            "✅ Tokens updated in .env and ingestion service notified.";
+        } catch (e) {
+          document.getElementById("statusText").innerHTML =
+            "⚠️ Token saved locally but health check failed.";
+        }
+      } else if (data.status === "error") {
+        document.getElementById("statusText").innerHTML = "❌ Authentication failed.";
+      }
+    });
+  </script>
+</body>
+</html>
