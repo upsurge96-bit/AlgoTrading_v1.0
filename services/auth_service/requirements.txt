@@ -1,6 +1,9 @@
 ```pip-requirements
-fastapi>=0.100.0
-uvicorn[standard]>=0.22.0
+fastapi>=0.115.5
+uvicorn[standard]>=0.32.0
+starlette>=0.40.0
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.9
 python-dotenv>=1.0.0
 kiteconnect>=4.1.0
 watchdog>=3.0.0
