@@ -2479,3 +2479,23 @@
 2025-10-18 04:12:35 | ERROR | monitoring_service | ❌ execution_service unreachable (http://execution_service:8030/health) → All connection attempts failed
 2025-10-18 04:12:35 | ERROR | monitoring_service | ❌ risk_service unreachable (http://risk_service:8040/health) → All connection attempts failed
 2025-10-18 04:12:35 | WARNING | monitoring_service | ⚠️ auth_service DOWN (404)
+2025-10-18 04:13:05 | INFO | monitoring_service | ✅ data_service is UP (http://data_service:8080/health) [0.002s]
+2025-10-18 04:13:05 | INFO | monitoring_service | ✅ strategy_service is UP (http://strategy_service:8020/health) [0.002s]
+2025-10-18 04:13:05 | ERROR | monitoring_service | ❌ execution_service unreachable (http://execution_service:8030/health) → All connection attempts failed
+2025-10-18 04:13:05 | ERROR | monitoring_service | ❌ risk_service unreachable (http://risk_service:8040/health) → All connection attempts failed
+2025-10-18 04:13:08 | ERROR | monitoring_service | ❌ auth_service unreachable (http://auth_service:8018/health) → 
+2025-10-18 04:13:38 | INFO | monitoring_service | ✅ data_service is UP (http://data_service:8080/health) [0.003s]
+2025-10-18 04:13:38 | INFO | monitoring_service | ✅ strategy_service is UP (http://strategy_service:8020/health) [0.002s]
+2025-10-18 04:13:38 | ERROR | monitoring_service | ❌ execution_service unreachable (http://execution_service:8030/health) → All connection attempts failed
+2025-10-18 04:13:38 | ERROR | monitoring_service | ❌ risk_service unreachable (http://risk_service:8040/health) → All connection attempts failed
+2025-10-18 04:13:41 | ERROR | monitoring_service | ❌ auth_service unreachable (http://auth_service:8018/health) → 
+2025-10-18 04:14:11 | INFO | monitoring_service | ✅ data_service is UP (http://data_service:8080/health) [0.002s]
+2025-10-18 04:14:11 | INFO | monitoring_service | ✅ strategy_service is UP (http://strategy_service:8020/health) [0.002s]
+2025-10-18 04:14:11 | ERROR | monitoring_service | ❌ execution_service unreachable (http://execution_service:8030/health) → All connection attempts failed
+2025-10-18 04:14:11 | ERROR | monitoring_service | ❌ risk_service unreachable (http://risk_service:8040/health) → All connection attempts failed
+2025-10-18 04:14:14 | ERROR | monitoring_service | ❌ auth_service unreachable (http://auth_service:8018/health) → 
+2025-10-18 04:14:44 | INFO | monitoring_service | ✅ data_service is UP (http://data_service:8080/health) [0.005s]
+2025-10-18 04:14:44 | INFO | monitoring_service | ✅ strategy_service is UP (http://strategy_service:8020/health) [0.003s]
+2025-10-18 04:14:44 | ERROR | monitoring_service | ❌ execution_service unreachable (http://execution_service:8030/health) → All connection attempts failed
+2025-10-18 04:14:44 | ERROR | monitoring_service | ❌ risk_service unreachable (http://risk_service:8040/health) → All connection attempts failed
+2025-10-18 04:14:47 | ERROR | monitoring_service | ❌ auth_service unreachable (http://auth_service:8018/health) → 
