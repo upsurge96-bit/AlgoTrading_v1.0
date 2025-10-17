@@ -26,9 +26,15 @@ instrumentator = Instrumentator().instrument(app).expose(app)
 def root():
     return {"service": SERVICE_NAME, "status": "ok"}
 
+@app.get("/health")
+def health():
+    return {"service": SERVICE_NAME, "status": "healthy"}
+
+
 @app.get("/healthz")
 def healthz():
-    return {"service": SERVICE_NAME, "status": "healthy"}
+    """Backward-compatible alias for /health"""
+    return health()
 
 # Optional: custom dummy metrics (you can remove or extend)
 from prometheus_client import Counter

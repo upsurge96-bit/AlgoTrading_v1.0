@@ -1,0 +1,56 @@
+2025-10-17 23:25:54 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-17 23:25:54 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-17 23:25:54 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-17 23:25:54 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-17 23:39:56 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-17 23:39:56 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-17 23:39:56 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-17 23:39:56 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-17 23:40:59 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-17 23:40:59 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-17 23:40:59 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-17 23:40:59 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 01:33:47 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 01:33:47 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 01:33:47 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 01:33:47 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 01:38:36 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 01:38:36 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 01:38:36 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 01:38:36 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 01:46:50 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 01:46:50 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 01:46:50 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 01:46:50 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 02:27:50 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 02:27:50 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 02:27:50 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 02:27:50 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 02:46:54 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 02:46:54 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 02:46:54 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 02:46:54 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 02:53:45 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 02:53:45 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 02:53:45 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 02:53:45 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 02:55:13 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 02:55:13 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 02:55:13 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 02:55:13 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 02:56:21 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 02:56:21 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 02:56:21 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 02:56:21 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 02:58:19 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 02:58:19 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 02:58:19 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 02:58:19 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 03:00:18 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 03:00:18 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 03:00:18 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 03:00:18 | INFO | data_service | 📦 Mounted data service API routes
+2025-10-18 03:03:48 | INFO | data_service | 📂 File logging enabled: /logs/data_service.log
+2025-10-18 03:03:48 | INFO | data_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 03:03:48 | INFO | data_service | ✅ Loaded config from: /app/config/config.yaml
+2025-10-18 03:03:48 | INFO | data_service | 📦 Mounted data service API routes

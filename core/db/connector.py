@@ -11,6 +11,7 @@ import time
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker
+from urllib.parse import urlsplit, urlunsplit  # <-- added
 
 # -----------------------------------------------------
 # Lazy import to prevent circular imports
@@ -47,10 +48,22 @@ DB_URL = os.getenv("DATABASE_URL") or config.get("database", {}).get("url")
 if not DB_URL:
     DB_URL = "postgresql://trader:traderpass@timescaledb:5432/trading"
 
+def _redact_dsn(dsn: str) -> str:
+    try:
+        u = urlsplit(dsn)
+        if u.password is None:
+            return dsn
+        netloc = f"{u.username}:***@{u.hostname}"
+        if u.port:
+            netloc += f":{u.port}"
+        return urlunsplit((u.scheme, netloc, u.path, u.query, u.fragment))
+    except Exception:
+        return dsn
+
 if logger:
-    logger.info(f"🧩 Using Database URL: {DB_URL}")
+    logger.info(f"🧩 Using Database URL: {_redact_dsn(DB_URL)}")
 else:
-    print(f"🧩 Using Database URL: {DB_URL}")
+    print(f"🧩 Using Database URL: {_redact_dsn(DB_URL)}")
 
 # -----------------------------------------------------
 # Connection retry logic (for Docker startup timing)

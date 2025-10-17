@@ -13,15 +13,14 @@ def health():
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("⚖️ Risk Service starting...")
-    db_url = config.get("database", {}).get("url")
-    logger.info(f"Connected to DB: {db_url}")
+    logger.info("🧠 Risk Service starting...")
+    logger.info(f"Loaded config keys: {list(config.keys())}")
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    logger.info("⚖️ Risk Service shutting down...")
+    logger.info("🧠 Risk Service shutting down...")
 
 if __name__ == "__main__":
-    port = int(config.get("api", {}).get("port", 8040))
+    port = int(config.get("api", {}).get("port", 8020))
     logger.info(f"🚀 Risk Service running on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)

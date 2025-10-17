@@ -25,6 +25,18 @@ scrape_configs:
           service: data_service
           env: production
 
+
+  # ==================================================
+  # 🧠 KITE AUTHENTICATION SERVICE
+  # ==================================================
+  - job_name: 'auth_service'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['data_service:8080']
+        labels:
+          service: data_service
+          env: production
+
   # ==================================================
   # 📈 PROMETHEUS SELF-MONITORING
   # ==================================================

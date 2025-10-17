@@ -1,0 +1,11 @@
+2025-10-18 01:38:36 | INFO | strategy_service | 📂 File logging enabled: /logs/execution_service.log
+2025-10-18 01:38:36 | INFO | strategy_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 01:38:36 | INFO | strategy_service | 🚀 Strategy Service running on port 8020
+2025-10-18 01:38:36 | INFO | strategy_service | 🧠 Strategy Service starting...
+2025-10-18 01:38:36 | INFO | strategy_service | Loaded config keys: ['timescaledb', 'minio', 'kafka', 'redis', 'retention', 'data', 'data_source', 'monitoring', 'kite']
+2025-10-18 01:46:43 | INFO | strategy_service | 🧠 Strategy Service shutting down...
+2025-10-18 01:46:49 | INFO | strategy_service | 📂 File logging enabled: /logs/execution_service.log
+2025-10-18 01:46:49 | INFO | strategy_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 01:46:49 | INFO | strategy_service | 🚀 Strategy Service running on port 8020
+2025-10-18 01:46:49 | INFO | strategy_service | 🧠 Strategy Service starting...
+2025-10-18 01:46:49 | INFO | strategy_service | Loaded config keys: ['timescaledb', 'minio', 'kafka', 'redis', 'retention', 'data', 'data_source', 'monitoring', 'kite']

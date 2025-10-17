@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from core.utils.config_loader import load_config
 import os
 from core.utils.logger import get_logger
+from urllib.parse import urlsplit, urlunsplit  # <-- added
 
 logger = get_logger("core.db")
 
@@ -20,7 +21,19 @@ if not DB_URL:
 if not DB_URL:
     DB_URL = "postgresql://trader:traderpass@timescaledb:5432/trading"
 
-logger.info(f"🧩 Using Database URL: {DB_URL}")
+def _redact_dsn(dsn: str) -> str:
+    try:
+        u = urlsplit(dsn)
+        if u.password is None:
+            return dsn
+        netloc = f"{u.username}:***@{u.hostname}"
+        if u.port:
+            netloc += f":{u.port}"
+        return urlunsplit((u.scheme, netloc, u.path, u.query, u.fragment))
+    except Exception:
+        return dsn
+
+logger.info(f"🧩 Using Database URL: {_redact_dsn(DB_URL)}")
 
 engine = create_engine(DB_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)

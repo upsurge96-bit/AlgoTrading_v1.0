@@ -8,6 +8,7 @@ timescaledb:
   echo: false
   connect_args:
     connect_timeout: 5
+  migrate_on_startup: true  # Enable/disable TimescaleDB migrations on service startup (default: true)
 
 minio:
   endpoint: minio:9000
@@ -57,17 +58,12 @@ data_source:
 
 monitoring:
   targets:
-    data_service: http://data_service:8080/healthz
-    strategy_service: http://strategy_service:8020/healthz
-    execution_service: http://execution_service:8030/healthz
-    risk_service: http://risk_service:8040/healthz
+    data_service: http://data_service:8080/health
+    strategy_service: http://strategy_service:8020/health
+    execution_service: http://execution_service:8030/health
+    risk_service: http://risk_service:8040/health
     auth_service: http://auth_service:8018/health
 
 # ===============================
 # 📈 BROKER INTEGRATIONS
 # ===============================
-
-kite:
-  api_key: ${KITE_API_KEY}
-  access_token: ${KITE_ACCESS_TOKEN}
-  tokens: ${KITE_TOKENS}

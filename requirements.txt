@@ -42,7 +42,7 @@ yfinance==0.2.43
 ################################################################################
 # 🤖 STRATEGY SERVICE (Backtesting & Live Trading)
 ################################################################################
-pandas-ta
+# pandas-ta  # temporarily disabled: install per-service or enable when compatible
 ccxt==4.4.8
 backtrader==1.9.78.123
 joblib==1.4.2

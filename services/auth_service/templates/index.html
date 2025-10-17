@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kite Token Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; max-width: 800px; margin: 0 auto; }
+        button { padding: 10px 20px; font-size: 16px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .status-valid { color: green; font-weight: bold; }
+        .status-invalid { color: red; font-weight: bold; }
+        .status-warning { color: #ff9900; font-weight: bold; }
+        .instructions { background-color: #f8f9fa; padding: 15px; border-left: 4px solid #007bff; text-align: left; margin: 20px 0; }
+        .url { font-family: monospace; background: #eee; padding: 5px; border-radius: 3px; }
+        .refresh-info { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
+        .footer { font-size: 0.8em; color: #666; margin-top: 40px; }
+        .token-timer { font-size: 1.2em; margin: 10px 0; }
+        .timer-value { font-weight: bold; }
+        .check-button { background: #28a745; margin-top: 10px; }
+        .check-button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <h1>AlgoTrading Kite Connect Token Generator</h1>
+    
+    <div class="card">
+        <h2>Token Status</h2>
+        {% if token_status == "valid" %}
+            <p>Current token: <span class="status-valid">VALID</span></p>
+            <p>Expires at: {{ expires_at }}</p>
+            
+            <div class="refresh-info">
+                <h3>Automated Refresh System</h3>
+                <p>The system will monitor token validity and alert when manual refresh is needed.</p>
+                <p>Checks are performed every hour.</p>
+                <button onclick="checkRefresh()" class="check-button">Check Refresh Status</button>
+                <div id="refresh-status" style="margin-top: 10px;"></div>
+            </div>
+            
+            <div class="token-timer">
+                <p>Time remaining: <span class="timer-value" id="time-remaining">Calculating...</span></p>
+            </div>
+        {% else %}
+            <p>Current token: <span class="status-invalid">INVALID OR EXPIRED</span></p>
+            <p>Please generate a new token by logging in.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Generate New Token</h2>
+        <p>Click below to log in to Zerodha and generate your access token.</p>
+        <button onclick="login()">Login to Kite</button>
+    </div>
+    
+    <div class="instructions">
+        <h3>Important Setup Instructions</h3>
+        <p>1. Make sure the <strong>redirect URL</strong> in your Zerodha developer console is set to:</p>
+        <p class="url">http://localhost:8018/callback</p>
+        <p>2. After login, you'll be redirected back to this application automatically.</p>
+        <p>3. The token will be generated and saved securely with encryption.</p>
+        <p>4. The system will monitor token validity and notify when manual refresh is needed.</p>
+    </div>
+    
+    <div class="footer">
+        <p>Secure Token Generator | AlgoTrading System</p>
+        <p>Token storage: Encrypted at rest with AES-256</p>
+    </div>
+    
+    <!-- Embed token expiry in a data-attribute to avoid JS parser errors with template tags -->
+    <div id="token-data" data-expiry="{{ expires_at if token_status == 'valid' else '' }}" style="display:none"></div>
+
+    <script>
+        // Initialize template variables from DOM data-attribute (avoids Jinja blocks inside <script>)
+        const TOKEN_EXPIRY_DATE = document.getElementById('token-data')?.dataset?.expiry || null;
+        
+        function login() {
+            window.location.href = "https://kite.zerodha.com/connect/login?v=3&api_key={{ api_key }}";
+        }
+        
+        function checkRefresh() {
+            const statusDiv = document.getElementById('refresh-status');
+            statusDiv.innerHTML = "Checking refresh status...";
+            
+            fetch('/refresh')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'valid') {
+                        statusDiv.innerHTML = `<span style="color: green;">✓ Token is valid</span><br>Expires in: ${data.time_to_expiry}<br>No refresh needed yet.`;
+                    } else if (data.status === 'refreshed') {
+                        statusDiv.innerHTML = `<span style="color: green;">✓ Token was just refreshed!</span>`;
+                        setTimeout(() => window.location.reload(), 2000);
+                    } else {
+                        statusDiv.innerHTML = `<span style="color: red;">⚠ Manual login required</span><br>${data.message}<br><button onclick="login()">Login Now</button>`;
+                    }
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = `Error checking refresh status: ${error}`;
+                });
+        }
+        
+        // Only run this code if token is valid
+        if (TOKEN_EXPIRY_DATE) {
+        function updateTimeRemaining() {
+            // Template variables will be injected at runtime
+            const expiryDate = new Date(TOKEN_EXPIRY_DATE);
+            const now = new Date();
+            const diffMs = expiryDate - now;
+            
+            if (diffMs <= 0) {
+                document.getElementById('time-remaining').innerHTML = 
+                    '<span style="color: red;">EXPIRED</span>';
+                return;
+            }
+            
+            const hours = Math.floor(diffMs / (1000 * 60 * 60));
+            const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let color = 'green';
+            if (hours < 2) {
+                color = 'red';
+            } else if (hours < 8) {
+                color = 'orange';
+            }
+            
+            document.getElementById('time-remaining').innerHTML = 
+                `<span style="color: ${color}">${hours} hours, ${minutes} minutes</span>`;
+            
+            // Check if we should show a warning
+            if (hours < 2) {
+                const refreshStatus = document.getElementById('refresh-status');
+                if (!refreshStatus.innerHTML) {
+                    refreshStatus.innerHTML = '<span style="color: red;">⚠ Token will expire soon! Click "Check Refresh Status" to initiate refresh.</span>';
+                }
+            }
+        }
+        
+        updateTimeRemaining();
+        setInterval(updateTimeRemaining, 60000); // Update every minute
+        }
+    </script>
+</body>
+</html>

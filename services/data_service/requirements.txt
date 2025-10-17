@@ -2,10 +2,20 @@ kiteconnect
 confluent-kafka
 sqlalchemy
 pandas
-psycopg2-binary
 minio
 websocket-client
 websockets 
 asyncio
 struct
 json
+
+fastapi
+uvicorn[standard]
+prometheus_client
+requests
+pyyaml # config_loader
+psycopg2-binary # Timescale/Postgres client
+python-dateutil # safe datetime parsing (optional)
+urllib3
+tzdata
+pyarrow  # optional for parquet (or fastparquet)

@@ -1,0 +1,48 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  default:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(funcName)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: default
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/app.log
+    mode: a
+  
+  rotating_file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/app_rotating.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+
+loggers:
+  trading:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  strategy:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console, rotating_file]
+  

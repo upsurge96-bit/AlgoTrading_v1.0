@@ -1,0 +1,5 @@
+2025-10-18 01:52:27 | INFO | risk_service | 📂 File logging enabled: /logs/risk_service.log
+2025-10-18 01:52:27 | INFO | risk_service | 📂 Logging initialized (stdout + optional file)
+2025-10-18 01:52:27 | INFO | risk_service | 🚀 Risk Service running on port 8020
+2025-10-18 01:52:27 | INFO | risk_service | 🧠 Risk Service starting...
+2025-10-18 01:52:27 | INFO | risk_service | Loaded config keys: ['timescaledb', 'minio', 'kafka', 'redis', 'retention', 'data', 'data_source', 'monitoring', 'kite']

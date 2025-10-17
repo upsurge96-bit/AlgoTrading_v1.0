@@ -6,13 +6,18 @@ services:
   auth_service:
     build:
       context: .                              # ✅ Build from project root
-      dockerfile: ./services/auth-service/Dockerfile
+      dockerfile: ./services/auth_service/Dockerfile
     container_name: auth_service
     ports:
       - "8018:8018"
     environment:
       - PYTHONPATH=/app
       - DOCKER_ENV=true
+      - SERVICE_NAME=auth_service
+      - LOG_FILE=/logs/auth_service.log
+      # Security settings (use placeholder values, override in secrets.env)
+      - TOKEN_ENCRYPTION_KEY=change_this_in_secrets_env
+      - ADMIN_API_KEY=change_this_in_secrets_env
     env_file:
       - .env
       - ./config/secrets.env
@@ -20,11 +25,24 @@ services:
       - ./.env:/app/.env
       - ./config:/app/config
       - ./logs:/logs
+      # Persist token and small state files without overwriting the app image
+      - ./services/auth_service/data:/app/data
+      # Ensure data directory exists with correct permissions
+      - type: bind
+        source: ./services/auth_service/data
+        target: /app/data
+        consistency: consistent
     restart: always
     depends_on:
       - data_service
     networks:
       - monitoring-net
+    # Add healthcheck for monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8018/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 
 
@@ -45,14 +63,20 @@ services:
     environment:
       SERVICE_NAME: data_service      # ✅ Force correct logger tag
       LOG_DIR: /logs                  # ✅ Ensure correct log directory
+      LOG_FILE: /logs/data_service.log
+      DATABASE_URL: postgresql://trader:traderpass@timescaledb:5432/trading   # <-- explicit for clarity
     volumes:
       - ./config:/app/config
       - ./logs:/logs
     ports:
       - "${DATA_SERVICE_PORT:-8080}:8080"
     depends_on:
-      - kafka
-      - minio
+      kafka:
+        condition: service_started
+      minio:
+        condition: service_started
+      timescaledb:
+        condition: service_healthy   # <-- wait for DB readiness
     networks:
       - monitoring-net
     command: >
@@ -123,7 +147,7 @@ services:
     environment:
       POSTGRES_USER: trader
       POSTGRES_PASSWORD: traderpass
-      POSTGRES_DB:  
+      POSTGRES_DB: trading   # <-- ensure DB exists
     ports:
       - "5432:5432"
     volumes:
@@ -156,6 +180,9 @@ services:
     container_name: monitoring_service
     restart: always
     env_file: .env
+    environment:
+      - SERVICE_NAME=monitoring_service
+      - LOG_FILE=/logs/monitoring_service.log
     volumes:
       - ./logs:/logs
       - ./config:/app/config
@@ -176,6 +203,75 @@ services:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - monitoring-net
+
+  # --------------------------------------------------------------
+  # ⚙️ Strategy Service
+  # --------------------------------------------------------------
+  strategy_service:
+    build:
+      context: .
+      dockerfile: ./services/strategy-service/Dockerfile
+    container_name: strategy_service
+    restart: always
+    env_file:
+      - .env
+      - ./config/secrets.env
+    environment:
+      - SERVICE_NAME=strategy_service
+      - LOG_FILE=/logs/strategy_service.log
+    volumes:
+      - ./config:/app/config
+      - ./logs:/logs
+    ports:
+      - "8020:8020"
+    networks:
+      - monitoring-net
+
+  # --------------------------------------------------------------
+  # ⚙️ Execution Service
+  # --------------------------------------------------------------
+  execution_service:
+    build:
+      context: .
+      dockerfile: ./services/execution-service/Dockerfile
+    container_name: execution_service
+    restart: always
+    env_file:
+      - .env
+      - ./config/secrets.env
+    environment:
+      - SERVICE_NAME=execution_service
+      - LOG_FILE=/logs/execution_service.log
+    volumes:
+      - ./config:/app/config
+      - ./logs:/logs
+    ports:
+      - "8030:8030"
+    networks:
+      - monitoring-net
+
+  # --------------------------------------------------------------
+  # ⚙️ Risk Service
+  # --------------------------------------------------------------
+  risk_service:
+    build:
+      context: .
+      dockerfile: ./services/risk-service/Dockerfile
+    container_name: risk_service
+    restart: always
+    env_file:
+      - .env
+      - ./config/secrets.env
+    environment:
+      - SERVICE_NAME=risk_service
+      - LOG_FILE=/logs/risk_service.log
+    volumes:
+      - ./config:/app/config
+      - ./logs:/logs
+    ports:
+      - "8040:8040"
     networks:
       - monitoring-net
 
