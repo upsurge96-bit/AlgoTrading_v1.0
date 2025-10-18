@@ -103,36 +103,51 @@
         // Only run this code if token is valid
         if (TOKEN_EXPIRY_DATE) {
         function updateTimeRemaining() {
-            // Template variables will be injected at runtime
-            const expiryDate = new Date(TOKEN_EXPIRY_DATE);
-            const now = new Date();
-            const diffMs = expiryDate - now;
-            
-            if (diffMs <= 0) {
-                document.getElementById('time-remaining').innerHTML = 
-                    '<span style="color: red;">EXPIRED</span>';
-                return;
-            }
-            
-            const hours = Math.floor(diffMs / (1000 * 60 * 60));
-            const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            
-            let color = 'green';
-            if (hours < 2) {
-                color = 'red';
-            } else if (hours < 8) {
-                color = 'orange';
-            }
-            
-            document.getElementById('time-remaining').innerHTML = 
-                `<span style="color: ${color}">${hours} hours, ${minutes} minutes</span>`;
-            
-            // Check if we should show a warning
-            if (hours < 2) {
-                const refreshStatus = document.getElementById('refresh-status');
-                if (!refreshStatus.innerHTML) {
-                    refreshStatus.innerHTML = '<span style="color: red;">⚠ Token will expire soon! Click "Check Refresh Status" to initiate refresh.</span>';
+            try {
+                // Template variables will be injected at runtime
+                const expiryDate = new Date(TOKEN_EXPIRY_DATE);
+                
+                // Check if the date is valid
+                if (isNaN(expiryDate.getTime())) {
+                    document.getElementById('time-remaining').innerHTML = 
+                        '<span style="color: orange;">UNKNOWN - Invalid date format</span>';
+                    console.error("Invalid expiry date format:", TOKEN_EXPIRY_DATE);
+                    return;
                 }
+                
+                const now = new Date();
+                const diffMs = expiryDate - now;
+                
+                if (diffMs <= 0) {
+                    document.getElementById('time-remaining').innerHTML = 
+                        '<span style="color: red;">EXPIRED</span>';
+                    return;
+                }
+                
+                const hours = Math.floor(diffMs / (1000 * 60 * 60));
+                const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                let color = 'green';
+                if (hours < 2) {
+                    color = 'red';
+                } else if (hours < 8) {
+                    color = 'orange';
+                }
+                
+                document.getElementById('time-remaining').innerHTML = 
+                    `<span style="color: ${color}">${hours} hours, ${minutes} minutes</span>`;
+                
+                // Check if we should show a warning
+                if (hours < 2) {
+                    const refreshStatus = document.getElementById('refresh-status');
+                    if (!refreshStatus.innerHTML) {
+                        refreshStatus.innerHTML = '<span style="color: red;">⚠ Token will expire soon! Click "Check Refresh Status" to initiate refresh.</span>';
+                    }
+                }
+            } catch (error) {
+                console.error("Error calculating time remaining:", error);
+                document.getElementById('time-remaining').innerHTML = 
+                    '<span style="color: red;">ERROR: Could not calculate time remaining</span>';
             }
         }
         

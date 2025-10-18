@@ -178,3 +178,9 @@ class KafkaClient:
 
     def __exit__(self, exc_type, exc, tb):
         self.close()
+
+
+# Backwards-compatible alias: some modules import KafkaProducer
+# from core.messaging.kafka_client import KafkaProducer
+# Keep this alias so existing code referencing KafkaProducer continues to work.
+KafkaProducer = KafkaClient

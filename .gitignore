@@ -40,9 +40,17 @@ env/
 logs/
 *.log
 
-# Database
+# Database and Storage
 *.sqlite3
 data/postgres/
+data/minio/
+data/**/*.stat
+data/**/*.bin
+data/**/*.json
+data/**/*.meta
+
+# MinIO
+.minio.sys/
 
 # Docker
 .docker/

@@ -10,18 +10,13 @@ import logging
 import traceback
 from pathlib import Path
 
-# Add parent directory to path to resolve imports
-parent_dir = Path(__file__).resolve().parent.parent.parent.parent
-sys.path.append(str(parent_dir))
-
 # Local imports
-from services.auth_service.lib.token.manager import TokenManager
-from core.utils.logger import setup_logging
+from .manager import TokenManager
+from core.utils.logger import get_logger
 from core.utils.metrics import push_to_prometheus
 
 # Configure logging
-setup_logging("config/logging.yaml")
-logger = logging.getLogger("token_service")
+logger = get_logger("token_service")
 
 class TokenService:
     """

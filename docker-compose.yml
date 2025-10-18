@@ -15,6 +15,10 @@ services:
       - DOCKER_ENV=true
       - SERVICE_NAME=auth_service
       - LOG_FILE=/logs/auth_service.log
+      # Kafka configuration
+      - KAFKA_BROKERS=kafka:9092
+      - ENABLE_KAFKA=true
+      - KAFKA_CLIENT=confluent  # Use high-performance C-based client (falls back to kafka-python if needed)
       # Security settings (use placeholder values, override in secrets.env)
       - TOKEN_ENCRYPTION_KEY=change_this_in_secrets_env
       - ADMIN_API_KEY=change_this_in_secrets_env
@@ -35,6 +39,8 @@ services:
     restart: always
     depends_on:
       - data_service
+      - kafka
+      - zookeeper
     networks:
       - monitoring-net
     # Add healthcheck for monitoring

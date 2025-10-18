@@ -107,6 +107,12 @@ def check_token_health(token_data: dict) -> dict:
 ### Kafka Events
 ```python
 def publish_token_event(event_type: str, token_data: dict):
+    # Check if Kafka is enabled
+    enable_kafka = os.environ.get("ENABLE_KAFKA", "true").lower() in ("true", "1", "yes", "y")
+    if not enable_kafka:
+        logger.debug(f"Kafka events disabled, skipping {event_type} event")
+        return
+        
     event = {
         "type": event_type,
         "broker_id": token_data["broker_id"],
@@ -115,6 +121,24 @@ def publish_token_event(event_type: str, token_data: dict):
     }
     kafka_producer.send(TOKEN_EVENTS_TOPIC, event)
 ```
+
+#### Kafka Configuration
+The service publishes events to the following topics:
+- `auth.token.refresh`: Successful token operations
+- `auth.token.error`: Failed token operations
+
+These events enable:
+- Real-time monitoring of token health
+- Audit trail for security compliance
+- Integration with other services (execution, risk, etc.)
+
+You can control Kafka behavior with the following environment variables:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ENABLE_KAFKA` | Enable/disable Kafka events | `true` |
+| `KAFKA_BROKERS` | Comma-separated list of brokers | `kafka:9092` |
+| `KAFKA_CLIENT` | Client implementation to use (`confluent` or `kafka-python`) | `confluent` |
 
 ## CLI Commands
 

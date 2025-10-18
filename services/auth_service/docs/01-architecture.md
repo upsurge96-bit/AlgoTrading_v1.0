@@ -129,9 +129,9 @@ sequenceDiagram
    - Zerodha Kite Connect
    - Other broker integrations
 
-2. **Infrastructure**
+3. **Infrastructure**
    - Redis for caching
-   - Kafka for events
+   - Kafka for events (can be disabled via ENABLE_KAFKA)
    - PostgreSQL for storage
 
 3. **Monitoring**

@@ -1,13 +1,15 @@
-# Zerodha credentials
-KITE_API_KEY=your_kite_api_key
-KITE_ACCESS_TOKEN=your_access_token
-
-# Kafka
-KAFKA_BROKERS=localhost:9092
-KAFKA_TOPIC=market_ticks
-
-# MinIO
-MINIO_ENDPOINT=localhost:9000
-MINIO_ACCESS_KEY=minioadmin
-MINIO_SECRET_KEY=minioadmin
-MINIO_BUCKET=market-data
+# Broker Configuration
+brokers:
+  - id: zerodha
+    name: Zerodha
+    type: kite
+    api_key: ${KITE_API_KEY}
+    api_secret: ${KITE_API_SECRET}
+    enabled: true
+    
+  - id: dhan
+    name: Dhan
+    type: dhan
+    api_key: ${DHAN_API_KEY}
+    api_secret: ${DHAN_API_SECRET}
+    enabled: false

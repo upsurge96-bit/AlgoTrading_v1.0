@@ -110,7 +110,19 @@ async def ui_redirect():
 async def home(request: Request):
     token = secure_load_token()
     token_status = "valid" if token and is_token_valid(token) else "invalid"
-    expires_at = token.get("expires_at", "N/A") if token else "N/A"
+    
+    # Format the expires_at timestamp correctly for JavaScript Date object
+    if token and token.get("expires_at"):
+        from datetime import datetime
+        try:
+            # Convert Unix timestamp to ISO format for JavaScript
+            timestamp = float(token["expires_at"])
+            expires_at = datetime.fromtimestamp(timestamp).isoformat()
+        except (ValueError, TypeError):
+            # If already in string format or invalid, use as is
+            expires_at = token.get("expires_at", "N/A")
+    else:
+        expires_at = "N/A"
     
     return templates.TemplateResponse("index.html", {
         "request": request, 
@@ -138,6 +150,45 @@ async def health_check():
 async def metrics():
     """Prometheus metrics endpoint."""
     return token_service.get_metrics()
+
+@app.get("/callback")
+async def callback(request: Request, request_token: str = None, action: str = None, status: str = None, type: str = None):
+    """
+    Handle Zerodha callback after user authentication.
+    
+    This endpoint receives the request_token from Zerodha after successful login
+    and exchanges it for an access token.
+    """
+    LOGGER.info(f"Received callback: request_token={request_token}, action={action}, status={status}")
+    
+    if not request_token:
+        LOGGER.error("No request token provided in callback")
+        raise HTTPException(status_code=400, detail="No request token provided")
+        
+    if status != "success":
+        LOGGER.error(f"Authentication failed: {status}")
+        raise HTTPException(status_code=400, detail=f"Authentication failed: {status}")
+    
+    try:
+        # Use token manager to create a token using the request token
+        broker_id = "zerodha"  # Default broker
+        token_manager = token_service.token_manager
+        
+        # Call refresh_token method with the request_token
+        success = token_manager.refresh_token(broker_id, request_token)
+        
+        if success:
+            # Redirect to home page with success message
+            return RedirectResponse(url="/?status=success")
+        else:
+            # Redirect to home page with error message
+            return RedirectResponse(url="/?status=error&message=Failed+to+exchange+token")
+            
+    except Exception as e:
+        LOGGER.exception(f"Error processing callback: {e}")
+        # Redirect to home page with error message
+        error_message = str(e).replace(" ", "+")
+        return RedirectResponse(url=f"/?status=error&message={error_message}")
 
 @app.get("/admin/token", dependencies=[Depends(get_api_key)])
 async def get_token():

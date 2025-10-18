@@ -165,3 +165,49 @@ def secure_load_token(master_key=None):
         dict: Decrypted token data or None if loading fails
     """
     return decrypt_token(master_key)
+
+def is_token_valid(token_data):
+    """
+    Check if token is valid based on expiry time.
+    
+    Args:
+        token_data (dict): Token data to check
+        
+    Returns:
+        bool: True if token is valid, False otherwise
+    """
+    from datetime import datetime, timezone
+    
+    if not token_data or not isinstance(token_data, dict):
+        return False
+        
+    # Check if token has expiry information
+    expires_at = token_data.get("expires_at")
+    if not expires_at:
+        return False
+        
+    # Check if token is expired
+    try:
+        # Get current time in UTC
+        current_time = datetime.now(timezone.utc).timestamp()
+        
+        # Convert expiry to timestamp if it's not already
+        if isinstance(expires_at, str):
+            try:
+                # Try to parse ISO format
+                expires_at = datetime.fromisoformat(expires_at).timestamp()
+            except ValueError:
+                # If fromisoformat fails, try strptime
+                try:
+                    expires_at = datetime.strptime(expires_at, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+                except ValueError:
+                    try:
+                        expires_at = datetime.strptime(expires_at, "%Y-%m-%dT%H:%M:%S").timestamp()
+                    except ValueError:
+                        # If all parsing attempts fail, try float conversion directly
+                        expires_at = float(expires_at)
+        
+        return current_time < expires_at
+    except Exception as e:
+        logger.error(f"Error checking token validity: {e}")
+        return False
