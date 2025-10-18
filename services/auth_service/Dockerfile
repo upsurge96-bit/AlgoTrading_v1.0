@@ -22,7 +22,10 @@ COPY .env /app/.env
 ENV PYTHONPATH=/app \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DOCKER_ENV=true
+    DOCKER_ENV=true \
+    SERVICE_NAME=auth_service \
+    LOG_DIR=/app/logs \
+    JSON_LOGS=true
 
 # -------------------------------------------------------------
 # 📦 Install Dependencies
@@ -32,12 +35,19 @@ RUN pip install --no-cache-dir -r /app/requirements.txt && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # -------------------------------------------------------------
-# 📁 Setup Data Directory with Proper Permissions
+# 📁 Setup Data and Logs Directories with Proper Permissions
 # -------------------------------------------------------------
 RUN mkdir -p /app/data && \
-    chmod 700 /app/data
+    mkdir -p /app/logs && \
+    chmod 700 /app/data && \
+    chmod 755 /app/logs
 
 # -------------------------------------------------------------
 # 🚀 Run Auth Service with Modular Structure
 # -------------------------------------------------------------
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8018"]
+ENV FASTAPI_MODE=true \
+    PORT=8018 \
+    LOG_LEVEL=info
+
+# Use the combined main.py file which supports both FastAPI and core application modes
+CMD ["python", "main.py"]

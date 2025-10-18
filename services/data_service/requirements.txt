@@ -1,21 +1,46 @@
-kiteconnect
-confluent-kafka
-sqlalchemy
-pandas
-minio
-websocket-client
-websockets 
-asyncio
-struct
-json
+# Data Service Requirements
 
+# Kite Connect
+kiteconnect
+
+# WebSocket
+websockets
+
+# Kafka
+confluent-kafka
+
+# Database
+sqlalchemy
+psycopg2-binary
+alembic
+
+# Data Processing
+pandas
+pyarrow
+fastparquet
+
+# MinIO
+minio
+
+# Web Framework
 fastapi
 uvicorn[standard]
-prometheus_client
+pydantic
+
+# HTTP Requests
 requests
-pyyaml # config_loader
-psycopg2-binary # Timescale/Postgres client
-python-dateutil # safe datetime parsing (optional)
 urllib3
+
+# Utilities
+python-dateutil
+pytz
 tzdata
-pyarrow  # optional for parquet (or fastparquet)
+
+# Configuration
+pyyaml
+
+# Monitoring
+prometheus_client
+
+# Scheduling
+APScheduler

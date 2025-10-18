@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
 """
-token_security.py
-----------------
+Token Security
+------------
 Security utilities for token encryption, decryption and secure storage.
 """
 
@@ -10,13 +9,14 @@ import json
 import base64
 import logging
 from pathlib import Path
+from datetime import datetime, timezone
 from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("token_security")
+from core.utils.logger import get_logger
+logger = get_logger("token_security")
 
 # Constants
 ENCRYPTION_KEY_FILE = Path("data/encryption.key")
@@ -35,7 +35,7 @@ def ensure_data_directory():
     return data_dir
 
 
-def generate_encryption_key(master_key=None):
+def generate_key(master_key=None):
     """
     Generate an encryption key from a master key or generate a new random one.
     
@@ -95,7 +95,7 @@ def encrypt_token(token_data, master_key=None):
     token_json = json.dumps(token_data).encode()
     
     # Get encryption key
-    key = generate_encryption_key(master_key)
+    key = generate_key(master_key)
     
     # Encrypt the token
     fernet = Fernet(key)
@@ -128,7 +128,7 @@ def decrypt_token(master_key=None):
         encrypted_token = TOKEN_FILE.read_bytes()
         
         # Get encryption key
-        key = generate_encryption_key(master_key)
+        key = generate_key(master_key)
         
         # Decrypt the token
         fernet = Fernet(key)
@@ -166,6 +166,7 @@ def secure_load_token(master_key=None):
     """
     return decrypt_token(master_key)
 
+
 def is_token_valid(token_data):
     """
     Check if token is valid based on expiry time.
@@ -176,7 +177,7 @@ def is_token_valid(token_data):
     Returns:
         bool: True if token is valid, False otherwise
     """
-    from datetime import datetime, timezone
+    # datetime and timezone are imported at the top of file
     
     if not token_data or not isinstance(token_data, dict):
         return False
@@ -211,3 +212,65 @@ def is_token_valid(token_data):
     except Exception as e:
         logger.error(f"Error checking token validity: {e}")
         return False
+
+
+def get_token_expiry(token_data):
+    """
+    Get formatted token expiry information.
+    
+    Args:
+        token_data (dict): Token data
+        
+    Returns:
+        tuple: (timestamp, human_readable_string)
+    """
+    # datetime and timezone are imported at the top of file
+    
+    if not token_data or not isinstance(token_data, dict):
+        return None, "No token data"
+        
+    expires_at = token_data.get("expires_at")
+    if not expires_at:
+        return None, "No expiry information"
+        
+    try:
+        # Convert expiry to timestamp if it's not already
+        if isinstance(expires_at, str):
+            try:
+                # Try to parse ISO format
+                expires_at = datetime.fromisoformat(expires_at).timestamp()
+            except ValueError:
+                # If fromisoformat fails, try strptime
+                try:
+                    expires_at = datetime.strptime(expires_at, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+                except ValueError:
+                    try:
+                        expires_at = datetime.strptime(expires_at, "%Y-%m-%dT%H:%M:%S").timestamp()
+                    except ValueError:
+                        # If all parsing attempts fail, try float conversion directly
+                        expires_at = float(expires_at)
+                        
+        # Create a datetime object from the timestamp
+        expiry_date = datetime.fromtimestamp(expires_at, tz=timezone.utc)
+        
+        # Calculate time remaining
+        now = datetime.now(timezone.utc)
+        time_left = expiry_date - now
+        
+        if time_left.total_seconds() <= 0:
+            return expires_at, "Expired"
+            
+        # Format human readable string
+        hours, remainder = divmod(time_left.total_seconds(), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        
+        if hours > 0:
+            human_readable = f"{int(hours)}h {int(minutes)}m remaining"
+        else:
+            human_readable = f"{int(minutes)}m {int(seconds)}s remaining"
+            
+        return expires_at, human_readable
+        
+    except Exception as e:
+        logger.error(f"Error formatting token expiry: {e}")
+        return expires_at, "Error calculating expiry"

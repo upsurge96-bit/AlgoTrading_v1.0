@@ -1,0 +1,103 @@
+# Data Service Configuration
+# Example configuration for instrument subscriptions and data fetching
+
+# Instruments to subscribe (comma-separated tokens)
+# Some popular NSE instruments:
+# 408065 - INFY
+# 884737 - TATAMOTORS
+# 738561 - RELIANCE
+# 779521 - SBIN
+# 340481 - HDFCBANK
+# 2953217 - TCS
+
+instruments:
+  # NSE Equity
+  nse_equity:
+    - 408065   # INFY
+    - 884737   # TATAMOTORS
+    - 738561   # RELIANCE
+    - 779521   # SBIN
+    - 340481   # HDFCBANK
+  
+  # NSE Indices
+  nse_indices:
+    - 256265   # NIFTY 50
+    - 264969   # NIFTY BANK
+  
+  # NFO Futures (update tokens based on current month)
+  nfo_futures: []
+  
+  # NFO Options (update tokens based on strikes)
+  nfo_options: []
+
+# WebSocket configuration
+websocket:
+  mode: full  # ltp, quote, or full
+  max_instruments_per_connection: 3000
+  reconnect_attempts: 10
+  reconnect_delay: 5
+
+# Data fetching configuration
+data_fetch:
+  # Historical data
+  historical:
+    enabled: false
+    years: 5
+    intervals:
+      - day
+      - 60minute
+      - 15minute
+    include_oi: true
+  
+  # Incremental updates
+  incremental:
+    enabled: true
+    schedule: "0 16 * * *"  # 4:00 PM daily (cron format)
+    days: 1
+    intervals:
+      - day
+      - 60minute
+
+# Storage configuration
+storage:
+  timescaledb:
+    retention_days: 365
+    compression_after_days: 7
+    chunk_time_interval: "1 day"
+  
+  minio:
+    retention_years: 5
+    batch_size: 1000
+    batch_interval_seconds: 60
+    compression: snappy
+
+# Processing configuration
+processing:
+  tick_processor:
+    workers: 4
+    queue_size: 10000
+    batch_size: 1000
+  
+  ohlcv_processor:
+    workers: 2
+    bulk_insert_size: 5000
+
+# Kafka configuration
+kafka:
+  enabled: true
+  topic_prefix: market_data
+  partitions: 3
+  replication_factor: 1
+
+# Monitoring configuration
+monitoring:
+  prometheus:
+    enabled: true
+    port: 8080
+  
+  health_check:
+    interval_seconds: 60
+    
+  logging:
+    level: INFO
+    format: json

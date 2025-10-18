@@ -11,6 +11,13 @@ Exposes:
 
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
+
+import sys
+from pathlib import Path
+
+# Add parent directory to path to resolve imports
+parent_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(parent_dir))
 import os
 
 # Service name (can be passed as ENV)
@@ -38,6 +45,9 @@ def healthz():
 
 # Optional: custom dummy metrics (you can remove or extend)
 from prometheus_client import Counter
+# Import core logger
+from core.utils.logger import setup_logging, get_logger
+
 
 dummy_counter = Counter("dummy_requests_total", "Total dummy requests")
 

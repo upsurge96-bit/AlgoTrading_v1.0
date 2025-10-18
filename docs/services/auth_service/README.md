@@ -32,7 +32,7 @@ KITE_API_SECRET=your_api_secret
 Run the provided script to generate secure random keys:
 
 ```bash
-python generate_secure_keys.py
+python scripts/generate_secure_keys.py
 ```
 
 This will generate:

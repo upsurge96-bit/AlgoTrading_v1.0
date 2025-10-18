@@ -6,6 +6,10 @@ from core.utils.logger import get_logger
 
 logger = get_logger("retry_util")
 
+class RetryException(Exception):
+    """Exception raised when a retryable operation fails after all attempts."""
+    pass
+
 def retry(exceptions, tries=3, delay=1, backoff=2):
     """Generic retry decorator with exponential backoff."""
     def decorator(func):

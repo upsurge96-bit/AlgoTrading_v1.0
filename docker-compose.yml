@@ -1,25 +1,38 @@
+# Updated Docker Compose with Base Service Pattern
 services:
+  # Base service definition that other services can extend
+  x-base-service: &base-service
+    build:
+      context: .
+    volumes:
+      - ./core:/app/core
+      - ./common:/app/common
+      - ./config:/app/config
+      - ./logs:/logs
+    environment:
+      - PYTHONPATH=/app
+      - DOCKER_ENV=true
+      - LOG_DIR=/logs
 
   # ==================================================
   # 🧠 AUTHENTICATION SERVICE
   # ==================================================
   auth_service:
+    <<: *base-service
     build:
-      context: .                              # ✅ Build from project root
+      context: .                              
       dockerfile: ./services/auth_service/Dockerfile
     container_name: auth_service
     ports:
       - "8018:8018"
     environment:
-      - PYTHONPATH=/app
-      - DOCKER_ENV=true
       - SERVICE_NAME=auth_service
       - LOG_FILE=/logs/auth_service.log
       # Kafka configuration
       - KAFKA_BROKERS=kafka:9092
       - ENABLE_KAFKA=true
-      - KAFKA_CLIENT=confluent  # Use high-performance C-based client (falls back to kafka-python if needed)
-      # Security settings (use placeholder values, override in secrets.env)
+      - KAFKA_CLIENT=confluent
+      # Security settings
       - TOKEN_ENCRYPTION_KEY=change_this_in_secrets_env
       - ADMIN_API_KEY=change_this_in_secrets_env
     env_file:
@@ -29,13 +42,7 @@ services:
       - ./.env:/app/.env
       - ./config:/app/config
       - ./logs:/logs
-      # Persist token and small state files without overwriting the app image
       - ./services/auth_service/data:/app/data
-      # Ensure data directory exists with correct permissions
-      - type: bind
-        source: ./services/auth_service/data
-        target: /app/data
-        consistency: consistent
     restart: always
     depends_on:
       - data_service
@@ -43,21 +50,17 @@ services:
       - zookeeper
     networks:
       - monitoring-net
-    # Add healthcheck for monitoring
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8018/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:8018/health"]
       interval: 30s
       timeout: 5s
       retries: 3
-
-
-
-
 
   # ==================================================
   # 🧠 DATA INGESTION SERVICE
   # ==================================================
   data_service:
+    <<: *base-service
     build:
       context: .
       dockerfile: ./services/data_service/Dockerfile
@@ -67,10 +70,10 @@ services:
       - .env
       - ./config/secrets.env
     environment:
-      SERVICE_NAME: data_service      # ✅ Force correct logger tag
-      LOG_DIR: /logs                  # ✅ Ensure correct log directory
-      LOG_FILE: /logs/data_service.log
-      DATABASE_URL: postgresql://trader:traderpass@timescaledb:5432/trading   # <-- explicit for clarity
+      - SERVICE_NAME=data_service
+      - LOG_DIR=/logs
+      - LOG_FILE=/logs/data_service.log
+      - DATABASE_URL=postgresql://trader:traderpass@timescaledb:5432/trading
     volumes:
       - ./config:/app/config
       - ./logs:/logs
@@ -82,14 +85,13 @@ services:
       minio:
         condition: service_started
       timescaledb:
-        condition: service_healthy   # <-- wait for DB readiness
+        condition: service_healthy
     networks:
       - monitoring-net
     command: >
       uvicorn services.data_service.main:app
       --host 0.0.0.0
       --port 8080
-
 
   # --------------------------------------------------------------
   # 🔸 Zookeeper
@@ -103,7 +105,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      - monitoring-net    # ✅ same network as kafka
+      - monitoring-net
     restart: unless-stopped
 
   # --------------------------------------------------------------
@@ -116,14 +118,14 @@ services:
      - zookeeper
    environment:
      KAFKA_BROKER_ID: 1
-     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # ✅ reachable inside same network
+     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
    ports:
      - "9092:9092"
    networks:
-     - monitoring-net    # ✅ same network
+     - monitoring-net
    restart: unless-stopped
 
   # --------------------------------------------------------------
@@ -153,7 +155,7 @@ services:
     environment:
       POSTGRES_USER: trader
       POSTGRES_PASSWORD: traderpass
-      POSTGRES_DB: trading   # <-- ensure DB exists
+      POSTGRES_DB: trading
     ports:
       - "5432:5432"
     volumes:
@@ -174,12 +176,11 @@ services:
     networks:
       - monitoring-net
 
-
-
   # ==================================================
   # 🪵 MONITORING + LOGS STACK
   # ==================================================
   monitoring_service:
+    <<: *base-service
     build:
       context: .
       dockerfile: ./services/monitoring-service/Dockerfile
@@ -216,6 +217,7 @@ services:
   # ⚙️ Strategy Service
   # --------------------------------------------------------------
   strategy_service:
+    <<: *base-service
     build:
       context: .
       dockerfile: ./services/strategy-service/Dockerfile
@@ -239,6 +241,7 @@ services:
   # ⚙️ Execution Service
   # --------------------------------------------------------------
   execution_service:
+    <<: *base-service
     build:
       context: .
       dockerfile: ./services/execution-service/Dockerfile
@@ -262,6 +265,7 @@ services:
   # ⚙️ Risk Service
   # --------------------------------------------------------------
   risk_service:
+    <<: *base-service
     build:
       context: .
       dockerfile: ./services/risk-service/Dockerfile
@@ -306,7 +310,7 @@ services:
     ports:
       - "3100:3100"
     networks:
-      - monitoring-net       # ✅ must match promtail network
+      - monitoring-net
 
   promtail:
     image: grafana/promtail:2.9.4
@@ -319,7 +323,7 @@ services:
     depends_on:
       - loki
     networks:
-      - monitoring-net       # ✅ same network as loki
+      - monitoring-net
 
   pgadmin:
     image: dpage/pgadmin4
@@ -334,7 +338,6 @@ services:
       - timescaledb
     networks:
       - monitoring-net 
-
 
 # ==================================================
 # 🔹 NETWORK

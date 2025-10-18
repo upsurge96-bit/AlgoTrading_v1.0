@@ -36,7 +36,13 @@ def main():
     # Offer to save to a file
     save = input("\nSave these keys to .env.production? (y/n): ")
     if save.lower() == 'y':
-        env_file = Path(".env.production")
+        # Set the correct path relative to the script location
+        # Handle the case when script is run from scripts/ directory
+        script_dir = Path(__file__).resolve().parent
+        service_dir = script_dir.parent
+        
+        # Env file should be at the service root
+        env_file = service_dir / ".env.production"
         
         # If file exists, read it first to preserve other settings
         env_content = ""

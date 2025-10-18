@@ -17,15 +17,15 @@ from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 
 # Import middlewares
-from middlewares import add_middlewares
+from api.middlewares import add_middlewares
 
 # Import core components
-from lib.token.manager import TokenManager
-from lib.token.service import TokenService
-from lib.token.status import TokenStatus
+from core.token.manager import TokenManager
+from core.token.service import TokenService
+from core.token.status import TokenStatus
 
 # Import token security module
-from token_security import secure_load_token, is_token_valid
+from utils.security import secure_load_token, is_token_valid, get_token_expiry
 
 # Configure logging
 from core.utils.logger import get_logger

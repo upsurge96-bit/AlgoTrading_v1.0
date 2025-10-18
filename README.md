@@ -43,4 +43,17 @@ The platform includes robust time handling utilities in `core/utils/time_utils.p
 - `datetime_to_timestamp()`: Convert datetime to Unix timestamp
 - `timestamp_to_datetime()`: Convert Unix timestamp to datetime
 
-See [Time Handling Best Practices](docs/time_handling.md) for detailed guidance." 
+See the documentation for more details:
+- [Time Handling Best Practices](docs/time_handling.md)
+- [Time Handling for Interviews](docs/time_handling_interview.md)
+
+## Authentication
+
+The platform includes a comprehensive authentication service that handles:
+- Secure token management for broker APIs
+- Automated token refresh and expiry monitoring
+- Encrypted storage of sensitive credentials
+
+Documentation:
+- [Authentication Best Practices](docs/auth_best_practices.md)
+- [Authentication Service Learnings](docs/auth_service_learnings.md)" 
