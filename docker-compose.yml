@@ -33,8 +33,8 @@ services:
       - ENABLE_KAFKA=true
       - KAFKA_CLIENT=confluent
       # Security settings
-      - TOKEN_ENCRYPTION_KEY=change_this_in_secrets_env
-      - ADMIN_API_KEY=change_this_in_secrets_env
+      - TOKEN_ENCRYPTION_KEY=change_this_in_production_super_secret_key
+      - ADMIN_API_KEY=change_this_in_production_admin_key
     env_file:
       - .env
       - ./config/secrets.env
@@ -74,6 +74,7 @@ services:
       - LOG_DIR=/logs
       - LOG_FILE=/logs/data_service.log
       - DATABASE_URL=postgresql://trader:traderpass@timescaledb:5432/trading
+      - ADMIN_API_KEY=change_this_in_production_admin_key
     volumes:
       - ./config:/app/config
       - ./logs:/logs

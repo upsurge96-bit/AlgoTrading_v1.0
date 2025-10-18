@@ -83,16 +83,16 @@ async def lifespan(app: FastAPI):
         # setup_signal_handlers()  # Disabled for Windows compatibility
         
         # Start background workers if enabled
-        if settings.workers.enable_live_data or settings.workers.enable_historical_data:
+        if settings.workers.live_streaming or settings.workers.historical_fetch:
             logger.info("Starting background workers...")
             
             from services.data_service.workers import DataServiceCoordinator
             
             worker_coordinator = DataServiceCoordinator(
                 instrument_tokens=settings.instruments.tokens,
-                enable_live_streaming=settings.workers.enable_live_data,
-                enable_historical_fetch=settings.workers.enable_historical_data,
-                enable_scheduler=settings.workers.enable_scheduler,
+                enable_live_streaming=settings.workers.live_streaming,
+                enable_historical_fetch=settings.workers.historical_fetch,
+                enable_scheduler=settings.workers.scheduler,
                 websocket_mode=settings.websocket.mode
             )
             
@@ -191,9 +191,9 @@ def root():
             "redoc": "/redoc"
         },
         "workers": {
-            "live_data": settings.workers.enable_live_data,
-            "historical_data": settings.workers.enable_historical_data,
-            "scheduler": settings.workers.enable_scheduler
+            "live_data": settings.workers.live_streaming,
+            "historical_data": settings.workers.historical_fetch,
+            "scheduler": settings.workers.scheduler
         }
     }
 

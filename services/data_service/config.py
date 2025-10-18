@@ -43,8 +43,8 @@ class MinIOConfig(BaseModel):
     """MinIO configuration"""
     enabled: bool = Field(default=True, description="Enable MinIO")
     endpoint: str = Field(default="minio:9000", description="MinIO endpoint")
-    access_key: str = Field(default="minioadmin", description="MinIO access key")
-    secret_key: str = Field(default="minioadmin", description="MinIO secret key")
+    access_key: str = Field(default=os.getenv("MINIO_ACCESS_KEY", "minioaccess"), description="MinIO access key")
+    secret_key: str = Field(default=os.getenv("MINIO_SECRET_KEY", "miniopass"), description="MinIO secret key")
     bucket: str = Field(default="market-data", description="MinIO bucket name")
     secure: bool = Field(default=False, description="Use HTTPS")
     compression: Literal["snappy", "gzip", "none"] = Field(default="snappy", description="Parquet compression")

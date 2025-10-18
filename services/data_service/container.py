@@ -60,8 +60,7 @@ class ServiceContainer:
                 access_key=self.settings.minio.access_key,
                 secret_key=self.settings.minio.secret_key,
                 bucket=self.settings.minio.bucket,
-                secure=self.settings.minio.secure,
-                compression=self.settings.minio.compression
+                secure=self.settings.minio.secure
             )
             logger.info("MinIOHandler created")
         return self._services["minio_handler"]

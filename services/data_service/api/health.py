@@ -312,8 +312,8 @@ async def health_check(deps: DependencyProvider = Depends(get_dependencies)):
         details={
             "environment": settings.service.environment,
             "workers_enabled": {
-                "live_data": settings.workers.enable_live_data,
-                "historical_data": settings.workers.enable_historical_data
+                "live_data": settings.workers.live_streaming,
+                "historical_data": settings.workers.historical_fetch
             }
         }
     )
@@ -327,7 +327,7 @@ async def health_check(deps: DependencyProvider = Depends(get_dependencies)):
     
     return JSONResponse(
         status_code=status_code,
-        content=response.dict()
+        content=response.model_dump(mode='json')
     )
 
 
