@@ -17,7 +17,7 @@ class AuthClient:
     
     def __init__(self, auth_service_url: Optional[str] = None, admin_api_key: Optional[str] = None):
         self.auth_service_url = auth_service_url or os.getenv("AUTH_SERVICE_URL", "http://auth_service:8018")
-        self.admin_api_key = admin_api_key or os.getenv("ADMIN_API_KEY", "change-me-in-production")
+        self.admin_api_key = admin_api_key or os.getenv("ADMIN_API_KEY", "change_this_in_secrets_env")
         self._cached_token: Optional[Dict] = None
         self._cache_time: Optional[datetime] = None
         

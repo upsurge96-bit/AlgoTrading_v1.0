@@ -7,65 +7,78 @@ Welcome to the comprehensive documentation for the AlgoTrading platform. This do
 ```
 docs/
 ├── README.md                       # This file
-├── architecture/                   # Architecture & Design
-├── guides/                         # How-to Guides
-│   ├── authentication/            # Auth & Security
-│   ├── logging/                   # Logging System
-│   └── time-handling/             # Time & Timezone
-├── services/                       # Service Documentation
-│   ├── auth_service/              # Auth Service
-│   └── data_service/              # Data Service
-└── status-reports/                # Implementation Reports
+├── architecture/                   # System Architecture & Design
+│   ├── PRODUCTION_READINESS.md    # Production deployment guide
+│   ├── MULTI_GRANULARITY_IMPLEMENTATION.md # Data pipeline design
+│   └── STRUCTURE.md               # Project structure
+├── guides/                         # How-to Guides & Best Practices
+│   ├── CORE_UTILITIES.md         # Core utilities guide
+│   ├── authentication/            # Auth & Security guides
+│   ├── logging/                   # Logging system guides
+│   └── time-handling/             # Time & timezone guides
+├── services/                       # Service-Specific Documentation
+│   ├── auth_service/              # Auth service docs
+│   └── data_service/              # Data service docs
+│       └── monitoring/            # Monitoring guides (NEW!)
+├── operations/                     # Operations & Troubleshooting (NEW!)
+│   ├── testing/                   # Test procedures & reports
+│   └── troubleshooting/           # Diagnostic guides
+├── development/                    # Development Documentation (NEW!)
+│   ├── refactoring/               # Refactoring history
+│   └── quick-reference/           # Quick reference guides
+└── reports/                        # Status Reports & Summaries (NEW!)
+    ├── final/                     # Final verification reports
+    ├── status/                    # Status reports
+    └── archive/                   # Historical documentation
 ```
 
-## 🏗️ Architecture & Design
+## 📖 Documentation Sections
 
-Production-ready architecture, design patterns, and system overview.
+### 🏗️ [Architecture](./architecture/)
+System design, architecture patterns, and production deployment guides.
+- [Production Readiness](./architecture/PRODUCTION_READINESS.md) - Deployment guide
+- [Multi-Granularity Pipeline](./architecture/MULTI_GRANULARITY_IMPLEMENTATION.md) - Data pipeline
+- [Project Structure](./architecture/STRUCTURE.md) - Codebase organization
 
-- [**PRODUCTION_READINESS.md**](architecture/PRODUCTION_READINESS.md) - Production readiness summary with complete architecture overview, dependency injection, error handling, health checks, and deployment guidelines
+### � [Guides](./guides/)
+Development guides, best practices, and how-to documentation.
 
-## 📖 Guides
+#### Core Utilities
+- [Core Utilities Guide](./guides/CORE_UTILITIES.md) - **START HERE** for logging & config
 
-### ⚙️ Core Utilities ([guides/CORE_UTILITIES.md](guides/CORE_UTILITIES.md))
-**NEW!** Centralized logging and configuration - the foundation for all services.
-- How to use `core.utils.logger` for consistent logging
-- How to use `core.utils.config_loader` for simple YAML configs
-- Migration guide from deprecated utilities
-- When to use Pydantic config vs simple config
+#### Authentication & Security
+- [Best Practices](./guides/authentication/auth_best_practices.md) - Security standards
+- [Setup Guide](./guides/authentication/READY_FOR_LOGIN.md) - OAuth configuration
 
-### 🔐 Authentication & Security ([guides/authentication/](guides/authentication/))
-- [**auth_best_practices.md**](guides/authentication/auth_best_practices.md) - Security best practices for authentication
-- [**auth_service_cleanup.md**](guides/authentication/auth_service_cleanup.md) - Auth service cleanup and refactoring notes
-- [**auth_service_learnings.md**](guides/authentication/auth_service_learnings.md) - Lessons learned from implementation
-- [**READY_FOR_LOGIN.md**](guides/authentication/READY_FOR_LOGIN.md) - OAuth setup and login readiness guide
+#### Logging System
+- [Logging Guide](./guides/logging/logging_guide.md) - How to use logging
+- [Standards](./guides/logging/logging_standardization.md) - Logging conventions
 
-### 📊 Logging System ([guides/logging/](guides/logging/))
-- [**logging_system.md**](guides/logging/logging_system.md) - Comprehensive logging system overview
-- [**logging_guide.md**](guides/logging/logging_guide.md) - How to use the logging system
-- [**logging_standardization.md**](guides/logging/logging_standardization.md) - Logging standards and conventions
-- [**logging_refactoring_completion.md**](guides/logging/logging_refactoring_completion.md) - Refactoring completion report
-- [**logging_future_improvements.md**](guides/logging/logging_future_improvements.md) - Future improvements roadmap
-- [**logger_migration_guide.md**](guides/logging/logger_migration_guide.md) - Migration guide for legacy code
+#### Time Handling
+- [Time Handling](./guides/time-handling/time_handling.md) - Timezone management
+- [Time Q&A](./guides/time-handling/time_handling_interview.md) - In-depth guide
 
-### ⏰ Time Handling ([guides/time-handling/](guides/time-handling/))
-- [**time_handling.md**](guides/time-handling/time_handling.md) - Time handling strategies and timezone management
-- [**time_handling_interview.md**](guides/time-handling/time_handling_interview.md) - In-depth Q&A on time handling
+### 🔧 [Services](./services/)
+Service-specific documentation with API references and setup guides.
+- [Auth Service](./services/auth_service/) - OAuth 2.0, token management
+- [Data Service](./services/data_service/) - Market data streaming
+  - [Monitoring](./services/data_service/monitoring/) - Heartbeat & market status
 
-## 🔧 Services
+### ⚙️ [Operations](./operations/)
+Operational guides, testing, and troubleshooting documentation.
+- [Testing](./operations/testing/) - Verification reports and test procedures
+- [Troubleshooting](./operations/troubleshooting/) - Diagnostic guides and status reports
 
-Microservice-specific documentation with API references and setup guides.
+### 💻 [Development](./development/)
+Development documentation, refactoring history, and quick references.
+- [Refactoring History](./development/refactoring/) - Code reorganization docs
+- [Quick Reference](./development/quick-reference/) - Command cheat sheets
 
-- [**services/**](services/README.md) - Services hub with architecture diagrams
-  - [**auth_service/**](services/auth_service/README.md) - OAuth 2.0, token management, session handling
-  - [**data_service/**](services/data_service/README.md) - Market data streaming, storage, and processing
-
-## 📊 Status Reports
-
-Implementation milestones, success reports, and critical fixes.
-
-- [**CRITICAL_FIX_APPLIED.md**](status-reports/CRITICAL_FIX_APPLIED.md) - Critical OAuth configuration fix
-- [**HISTORICAL_DATA_TEST_SUCCESS.md**](status-reports/HISTORICAL_DATA_TEST_SUCCESS.md) - Historical data testing results
-- [**SUCCESS_LIVE_DATA_STREAMING.md**](status-reports/SUCCESS_LIVE_DATA_STREAMING.md) - Live data streaming success
+### 📊 [Reports](./reports/)
+System status reports, verification results, and implementation summaries.
+- [Final Reports](./reports/final/) - Comprehensive verification reports
+- [Status Reports](./reports/status/) - Current and historical status
+- [Archive](./reports/archive/) - Historical documentation
 
 ## 🏗️ Platform Architecture
 
@@ -128,12 +141,16 @@ Navigate to [services/](services/) and select the service you need:
 - Data Service - WebSocket streaming, historical data, dual storage
 
 ### Quick Links
-- 📘 [Production Deployment](architecture/PRODUCTION_READINESS.md)
-- ⚙️ [Core Utilities Guide](guides/CORE_UTILITIES.md) - **START HERE**
-- 🔐 [Authentication Setup](guides/authentication/READY_FOR_LOGIN.md)
-- 📊 [Logging Best Practices](guides/logging/logging_guide.md)
-- ⏰ [Time Handling Guide](guides/time-handling/time_handling.md)
-- 🎯 [Latest Success Report](status-reports/SUCCESS_LIVE_DATA_STREAMING.md)
+- 📘 [Production Deployment](./architecture/PRODUCTION_READINESS.md)
+- ⚙️ [Core Utilities Guide](./guides/CORE_UTILITIES.md) - **START HERE**
+- 🔐 [Authentication Setup](./guides/authentication/READY_FOR_LOGIN.md)
+- 📊 [Logging Best Practices](./guides/logging/logging_guide.md)
+- ⏰ [Time Handling Guide](./guides/time-handling/time_handling.md)
+- 💓 [Heartbeat Monitoring](./services/data_service/monitoring/HEARTBEAT_MONITORING.md)
+- 🌐 [Market Status Logging](./services/data_service/monitoring/MARKET_STATUS_LOGGING.md)
+- 🔧 [Troubleshooting Guide](./operations/troubleshooting/)
+- 🎯 [Final Verification Report](./reports/final/FINAL_VERIFICATION_REPORT.md)
+- ⚡ [Quick Reference](./development/quick-reference/)
 
 ## 📝 Contributing to Documentation
 
@@ -143,7 +160,11 @@ Navigate to [services/](services/) and select the service you need:
    - Architecture docs → `architecture/`
    - How-to guides → `guides/<topic>/`
    - Service docs → `services/<service_name>/`
-   - Status reports → `status-reports/`
+   - Test reports → `operations/testing/`
+   - Troubleshooting → `operations/troubleshooting/`
+   - Refactoring docs → `development/refactoring/`
+   - Status reports → `reports/status/`
+   - Final reports → `reports/final/`
 
 2. **Follow naming conventions**:
    - Use descriptive names: `SERVICE_STATUS.md` not `status.md`
@@ -154,6 +175,7 @@ Navigate to [services/](services/) and select the service you need:
 3. **Update indexes**:
    - Add links to this README
    - Update relevant section READMEs
+   - Update parent directory README
 
 ### Documentation Standards
 
@@ -163,6 +185,8 @@ Navigate to [services/](services/) and select the service you need:
 - ✅ Keep documentation in sync with code
 - ✅ Use emoji icons for visual navigation
 - ✅ Link to related documentation
+- ✅ Include troubleshooting sections
+- ✅ Add quick reference tables
 
 ## �️ Development Stack
 
@@ -176,33 +200,42 @@ Navigate to [services/](services/) and select the service you need:
 
 ## 📊 Documentation Metrics
 
-- **Total Documentation Files**: 30+
-- **Categories**: 5 (Architecture, Guides, Services, Status Reports, Meta)
+- **Total Documentation Files**: 60+
+- **Main Categories**: 7 (Architecture, Guides, Services, Operations, Development, Reports, Meta)
 - **Services Documented**: 2 (Auth, Data)
 - **Guide Topics**: 3 (Authentication, Logging, Time Handling)
-- **Last Updated**: October 18, 2025
+- **Status Reports**: 10+
+- **Last Reorganization**: October 19, 2025
 
 ## 🆘 Getting Help
 
 ### For Common Issues
-1. Check relevant guide in [guides/](guides/)
-2. Review [status-reports/](status-reports/) for known issues and fixes
-3. Consult service-specific docs in [services/](services/)
+1. Check [operations/troubleshooting/](./operations/troubleshooting/) for diagnostic guides
+2. Review [development/quick-reference/](./development/quick-reference/) for common commands
+3. Consult service-specific docs in [services/](./services/)
+
+### For Testing & Verification
+1. See [operations/testing/](./operations/testing/) for test procedures
+2. Review [reports/final/](./reports/final/) for verification results
+3. Check [reports/status/](./reports/status/) for current system status
 
 ### For Architecture Questions
-- See [architecture/PRODUCTION_READINESS.md](architecture/PRODUCTION_READINESS.md)
-- Review service architecture in [services/](services/)
+- See [architecture/PRODUCTION_READINESS.md](./architecture/PRODUCTION_READINESS.md)
+- Review [architecture/MULTI_GRANULARITY_IMPLEMENTATION.md](./architecture/MULTI_GRANULARITY_IMPLEMENTATION.md)
+- Check service architecture in [services/](./services/)
 
-### For Implementation Examples
-- Check [status-reports/](status-reports/) for working examples
-- Review service READMEs for code snippets
+### For Development Help
+- Review [development/refactoring/](./development/refactoring/) for code organization
+- Check [guides/CORE_UTILITIES.md](./guides/CORE_UTILITIES.md) for utility usage
+- See [development/quick-reference/](./development/quick-reference/) for commands
 
 ---
 
 **Platform Version**: 1.0.0  
-**Documentation Version**: 2.0 (Restructured)  
-**Last Updated**: October 18, 2025
+**Documentation Version**: 3.0 (Fully Restructured)  
+**Last Updated**: October 19, 2025
 
 ## 📄 Meta Documentation
 
-- [**DOCUMENTATION_ORGANIZATION.md**](DOCUMENTATION_ORGANIZATION.md) - How this documentation was organized (history and structure)
+- [**DOCS_REORGANIZATION_PLAN.md**](../DOCS_REORGANIZATION_PLAN.md) - Reorganization plan (in root)
+- [**Documentation Archive**](./reports/archive/) - Historical documentation

@@ -13,9 +13,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
-from services.data_service.extraction.live_data import KiteWebSocketClient
+from services.data_service.extraction.websocket_client import KiteWebSocketClient
 from services.data_service.extraction.auth_client import AuthClient
-from services.data_service.extraction.historical_data import HistoricalDataFetcher
+from services.data_service.extraction.kite_api_client import HistoricalDataFetcher
 from services.data_service.processors.tick_processor import TickProcessor, OHLCVProcessor
 from services.data_service.processors.minio_handler import MinIOHandler
 from core.utils.logger import get_logger

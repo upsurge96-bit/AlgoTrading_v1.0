@@ -1,0 +1,46 @@
+✅ Logging initialized: data_service (development)
+⚠️ Error loading logging config: Unable to configure handler 'file'
+✅ Logging initialized: data_service (development)
+2025-10-19 00:08:23 | INFO | data_service | ✅ Loaded settings for environment: development
+2025-10-19 00:08:23 | INFO | data_service | ✅ Error handling middleware added
+2025-10-19 00:08:23 | INFO | data_service | ✅ Mounted health check endpoints
+2025-10-19 00:08:23 | INFO | data_service | ✅ Mounted data service API routes
+2025-10-19 00:08:23 | INFO | data_service | 🚀 Starting Data Service...
+2025-10-19 00:08:23 | INFO | services.data_service.container | ServiceContainer initialized
+2025-10-19 00:08:23 | INFO | services.data_service.container | Initializing ServiceContainer...
+2025-10-19 00:08:23 | INFO | services.data_service.processors.minio_handler | MinIO handler initialized: minio:9000/market-data
+2025-10-19 00:08:23 | INFO | services.data_service.container | MinIOHandler created
+2025-10-19 00:08:23 | INFO | services.data_service.container | MinIO bucket ready: market-data
+2025-10-19 00:08:23 | INFO | services.data_service.container | ✅ ServiceContainer initialized successfully
+2025-10-19 00:08:23 | INFO | data_service | ✅ Service container initialized
+2025-10-19 00:08:23 | INFO | data_service | Starting background workers...
+2025-10-19 00:08:23 | INFO | data_service.workers | DataServiceCoordinator initialized
+2025-10-19 00:08:23 | INFO | data_service | ✅ Background workers started
+2025-10-19 00:08:23 | INFO | data_service | Running database migrations...
+2025-10-19 00:08:23 | INFO | data_service.db.migrate | Applying migration 0001_create_timescale_ticks.sql -> postgresql://trader:traderpass@timescaledb:5432/trading
+2025-10-19 00:08:23 | INFO | data_service.db.migrate | Executing non-transactional statement in autocommit
+2025-10-19 00:08:23 | INFO | data_service.db.migrate | Migration applied successfully: 0001_create_timescale_ticks.sql
+2025-10-19 00:08:23 | INFO | data_service | ✅ Database migrations completed
+2025-10-19 00:08:23 | INFO | data_service | ✅ Data Service startup complete
+2025-10-19 00:08:23 | INFO | data_service.workers | Starting Data Service Coordinator...
+2025-10-19 00:08:24 | INFO | kafka_client | KafkaClient using confluent-kafka -> kafka:9092
+2025-10-19 00:08:24 | INFO | services.data_service.processors.minio_handler | MinIO handler initialized: minio:9000/market-data
+2025-10-19 00:08:24 | INFO | services.data_service.processors.tick_processor | TickProcessor initialized
+2025-10-19 00:08:24 | INFO | data_service.workers | LiveDataWorker initialized with 7 instruments
+2025-10-19 00:08:24 | INFO | data_service.workers | ✅ Data Service Coordinator started successfully
+2025-10-19 00:08:24 | INFO | data_service.workers | Starting live data worker...
+2025-10-19 00:08:24 | INFO | services.data_service.extraction.auth_client | Fetching token from auth service: http://auth_service:8018/admin/token
+2025-10-19 00:08:24 | ERROR | services.data_service.extraction.auth_client | Auth service returned error: {'status': 'operational', 'tokens': [{'error': "(psycopg2.errors.InFailedSqlTransaction) current transaction is aborted, commands ignored until end of transaction block\n\n[SQL: SELECT token_records.id AS token_records_id, token_records.broker_id AS token_records_broker_id, token_records.access_token AS token_records_access_token, token_records.refresh_token AS token_records_refresh_token, token_records.expiry_time AS token_records_expiry_time, token_records.last_refresh AS token_records_last_refresh, token_records.created_at AS token_records_created_at, token_records.updated_at AS token_records_updated_at, token_records.refresh_count AS token_records_refresh_count, token_records.error_count AS token_records_error_count, token_records.last_error AS token_records_last_error, token_records.token_metadata AS token_records_token_metadata \nFROM token_records \nWHERE token_records.broker_id = %(broker_id_1)s \n LIMIT %(param_1)s]\n[parameters: {'broker_id_1': 'zerodha', 'param_1': 1}]\n(Background on this error at: https://sqlalche.me/e/20/2j85)"}]}
+2025-10-19 00:08:24 | ERROR | services.data_service.extraction.live_data | Failed to fetch access token from auth service
+2025-10-19 00:08:24 | ERROR | data_service.workers | Error in live data worker: Failed to fetch access token
+Traceback (most recent call last):
+  File "/app/services/data_service/workers.py", line 104, in start
+    await self.ws_client.connect()
+  File "/app/services/data_service/extraction/live_data.py", line 110, in connect
+    raise RuntimeError("Failed to fetch access token")
+RuntimeError: Failed to fetch access token
+2025-10-19 00:08:24 | INFO | data_service.workers | Stopping live data worker...
+2025-10-19 00:08:24 | WARNING | data_service.workers | ⚠️ WebSocket disconnected - Will attempt to reconnect
+2025-10-19 00:08:24 | INFO | services.data_service.extraction.live_data | WebSocket closed
+2025-10-19 00:08:24 | INFO | services.data_service.processors.tick_processor | TickProcessor closed successfully
+2025-10-19 00:08:24 | INFO | data_service.workers | Live data worker stopped
